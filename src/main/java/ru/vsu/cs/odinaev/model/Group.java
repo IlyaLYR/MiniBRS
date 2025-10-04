@@ -32,4 +32,13 @@ public class Group {
     public void setCourseNumber(int courseNumber) {
         this.courseNumber = courseNumber;
     }
+
+    @Override
+    public String toString() {
+        return String.format("Группа{ID: %s, Название: '%s', Курс: %d}",
+                id.toString().substring(0, 8) + "...",
+                name,
+                courseNumber
+        );
+    }
 }

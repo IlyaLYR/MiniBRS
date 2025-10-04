@@ -32,4 +32,13 @@ public class Student {
     public void setGroupId(UUID groupId) {
         this.groupId = groupId;
     }
+
+    @Override
+    public String toString() {
+        return String.format("Студент{ID: %s, Имя: '%s', Группа: %s}",
+                id.toString().substring(0, 8) + "...",
+                name,
+                groupId.toString().substring(0, 8) + "..."
+        );
+    }
 }
