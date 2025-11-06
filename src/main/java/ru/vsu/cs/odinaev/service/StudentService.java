@@ -2,13 +2,12 @@ package ru.vsu.cs.odinaev.service;
 
 import ru.vsu.cs.odinaev.model.Student;
 import ru.vsu.cs.odinaev.model.Task;
-import ru.vsu.cs.odinaev.repository.Params;
-import ru.vsu.cs.odinaev.repository.Repository;
+import ru.vsu.cs.odinaev.repository.StudentRepository;
 
 import java.util.List;
 import java.util.UUID;
 
-public record StudentService(Repository<Student> studentRepository, GroupService groupService,
+public record StudentService(StudentRepository studentRepository, GroupService groupService,
                              TaskService taskService) implements Service {
 
     public Student createStudent(String name, UUID groupId) {
@@ -31,10 +30,8 @@ public record StudentService(Repository<Student> studentRepository, GroupService
         if (!studentRepository.existsById(studentId)) {
             throw new IllegalArgumentException("Студент с ID " + studentId + " не найден");
         }
-
         taskService.deleteStudentTasks(studentId);
-        studentRepository.deleteById(studentId);
-        //TODO НУЖНО ЛИ КАСКАДНОЕ УДАЛЕНИЕ ТАСКОВ?????
+        studentRepository.delete(studentId);
     }
 
     public List<Student> getAllStudents() {
@@ -45,9 +42,7 @@ public record StudentService(Repository<Student> studentRepository, GroupService
         if (!groupService.groupExists(groupId)) {
             throw new IllegalArgumentException("Группа с ID " + groupId + " не найдена");
         }
-
-        Params<Student> params = new Params<>(Student.class, "groupId", groupId);
-        return studentRepository.find(params);
+        return studentRepository.findByGroupId(groupId);
     }
 
     public Student getStudentById(UUID studentId) {
@@ -68,7 +63,7 @@ public record StudentService(Repository<Student> studentRepository, GroupService
             existingStudent.setGroupId(newGroupId);
         }
 
-        studentRepository.save(existingStudent);
+        studentRepository.update(existingStudent);
         return existingStudent;
     }
 
@@ -88,32 +83,10 @@ public record StudentService(Repository<Student> studentRepository, GroupService
             throw new IllegalArgumentException("Имя студента слишком длинное");
         }
     }
-
-    /**
-     * Поиск студентов по имени (использует Repository.find())
-     */
-    public List<Student> findStudentsByName(String name) {
-        Params<Student> params = new Params<>(Student.class, "name", name);
-        return studentRepository.find(params);
-    }
-
     /**
      * Получение количества студентов в группе (использует Repository.find())
      */
     public int getStudentsCountByGroup(UUID groupId) {
-        Params<Student> params = new Params<>(Student.class, "groupId", groupId);
-        return studentRepository.find(params).size();
-    }
-
-    /**
-     * Проверка существования студента по имени и группе (использует Repository.exists())
-     */
-    public boolean studentExistsByNameAndGroup(String name, UUID groupId) {
-        java.util.Map<String, Object> filterParams = new java.util.HashMap<>();
-        filterParams.put("name", name);
-        filterParams.put("groupId", groupId);
-
-        Params<Student> params = new Params<>(Student.class, filterParams);
-        return studentRepository.exists(params);
+        return studentRepository.findByGroupId(groupId).size();
     }
 }

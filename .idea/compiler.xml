@@ -11,10 +11,11 @@
         <module name="ru.vsu.cs.odinaev.MiniBRS.main" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
+    <bytecodeTargetLevel target="17">
       <module name="org.example.MiniBRS" target="20" />
       <module name="org.example.MiniBRS.main" target="20" />
       <module name="org.example.MiniBRS.test" target="20" />
+      <module name="ru.vsu.cs.odinaev.MiniBRS" target="17" />
     </bytecodeTargetLevel>
   </component>
 </project>

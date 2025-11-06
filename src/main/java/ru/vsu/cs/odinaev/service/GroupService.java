@@ -3,14 +3,13 @@ package ru.vsu.cs.odinaev.service;
 import ru.vsu.cs.odinaev.model.Group;
 import ru.vsu.cs.odinaev.model.Student;
 import ru.vsu.cs.odinaev.model.Task;
-import ru.vsu.cs.odinaev.repository.Params;
-import ru.vsu.cs.odinaev.repository.Repository;
+import ru.vsu.cs.odinaev.repository.GroupRepository;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public record GroupService(Repository<Group> groupRepository, StudentService studentService) implements Service {
+public record GroupService(GroupRepository groupRepository, StudentService studentService) implements Service {
 
     public Group createGroup(String name, int courseNumber) {
         validateGroupName(name);
@@ -34,7 +33,7 @@ public record GroupService(Repository<Group> groupRepository, StudentService stu
             studentService.deleteStudent(student.getId());
         }
 
-        groupRepository.deleteById(groupId);
+        groupRepository.delete(groupId);
     }
 
     public List<Group> getAllGroups() {
@@ -55,7 +54,7 @@ public record GroupService(Repository<Group> groupRepository, StudentService stu
         existingGroup.setName(newName);
         existingGroup.setCourseNumber(newCourseNumber);
 
-        groupRepository.save(existingGroup);
+        groupRepository.update(existingGroup);
         return existingGroup;
     }
 
@@ -95,21 +94,5 @@ public record GroupService(Repository<Group> groupRepository, StudentService stu
         }
 
         return report;
-    }
-
-    /**
-     * Поиск групп по названию (использует Params)
-     */
-    public List<Group> findGroupsByName(String name) {
-        Params<Group> params = new Params<>(Group.class, "name", name);
-        return groupRepository.find(params);
-    }
-
-    /**
-     * Поиск групп по номеру курса (использует Params)
-     */
-    public List<Group> findGroupsByCourseNumber(int courseNumber) {
-        Params<Group> params = new Params<>(Group.class, "courseNumber", courseNumber);
-        return groupRepository.find(params);
     }
 }

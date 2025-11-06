@@ -9,8 +9,13 @@ import org.jline.utils.InfoCmp;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
-import ru.vsu.cs.odinaev.model.*;
-import ru.vsu.cs.odinaev.service.*;
+import ru.vsu.cs.odinaev.model.Group;
+import ru.vsu.cs.odinaev.model.Student;
+import ru.vsu.cs.odinaev.model.Task;
+import ru.vsu.cs.odinaev.model.TaskStatus;
+import ru.vsu.cs.odinaev.service.GroupService;
+import ru.vsu.cs.odinaev.service.StudentService;
+import ru.vsu.cs.odinaev.service.TaskService;
 
 import java.util.ArrayList;
 import java.util.List;

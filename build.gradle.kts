@@ -11,7 +11,7 @@ repositories {
 }
 
 dependencies {
-    implementation("org.jline:jline:3.23.0")
+    implementation("org.jline:jline:3.25.0")
     implementation("org.jline:jline-terminal-jansi:3.23.0")
     implementation("com.google.code.gson:gson:2.10.1")
     testImplementation(platform("org.junit:junit-bom:5.10.0"))
@@ -19,6 +19,10 @@ dependencies {
 
     implementation("info.picocli:picocli:4.7.5")
     annotationProcessor("info.picocli:picocli-codegen:4.7.5")
+
+    implementation("com.h2database:h2:2.2.224")
+    implementation("com.zaxxer:HikariCP:5.1.0")
+    implementation("com.typesafe:config:1.4.3")
 }
 
 application {
