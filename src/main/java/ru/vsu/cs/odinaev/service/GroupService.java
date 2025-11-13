@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public record GroupService(GroupRepository groupRepository, StudentService studentService) implements Service {
+public record GroupService(GroupRepository groupRepository, StudentService studentService) implements IGroupService {
 
     public Group createGroup(String name, int courseNumber) {
         validateGroupName(name);
@@ -41,8 +41,7 @@ public record GroupService(GroupRepository groupRepository, StudentService stude
     }
 
     public Group getGroupById(UUID groupId) {
-        return groupRepository.findById(groupId)
-                .orElseThrow(() -> new IllegalArgumentException("Группа с ID " + groupId + " не найдена"));
+        return groupRepository.findById(groupId).orElseThrow(() -> new IllegalArgumentException("Группа с ID " + groupId + " не найдена"));
     }
 
     public Group updateGroup(UUID groupId, String newName, Integer newCourseNumber) {

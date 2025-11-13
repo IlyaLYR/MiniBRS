@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public class StudentRepository {
+public class StudentRepository implements IStudentRepository {
     private final DatabaseManager dbManager;
 
     public StudentRepository() {

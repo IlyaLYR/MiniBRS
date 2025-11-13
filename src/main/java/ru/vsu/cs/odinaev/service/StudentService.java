@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.UUID;
 
 public record StudentService(StudentRepository studentRepository, GroupService groupService,
-                             TaskService taskService) implements Service {
+                             TaskService taskService) implements IStudentService {
 
     public Student createStudent(String name, UUID groupId) {
         validateStudentName(name);

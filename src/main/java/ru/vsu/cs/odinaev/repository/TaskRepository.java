@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public class TaskRepository {
+public class TaskRepository implements ITaskRepository {
     private final DatabaseManager dbManager;
 
     public TaskRepository() {
