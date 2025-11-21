@@ -1,22 +1,26 @@
 package ru.vsu.cs.odinaev;
 
 import ru.vsu.cs.odinaev.controller.CmdController;
-import ru.vsu.cs.odinaev.model.Group;
-import ru.vsu.cs.odinaev.model.Student;
-import ru.vsu.cs.odinaev.model.Task;
-import ru.vsu.cs.odinaev.repository.LocalRepository;
+import ru.vsu.cs.odinaev.database.DatabaseManager;
+import ru.vsu.cs.odinaev.repository.GroupRepository;
+import ru.vsu.cs.odinaev.repository.StudentRepository;
+import ru.vsu.cs.odinaev.repository.TaskRepository;
 import ru.vsu.cs.odinaev.service.GroupService;
 import ru.vsu.cs.odinaev.service.StudentService;
 import ru.vsu.cs.odinaev.service.TaskService;
 
 public class Application {
     private final CmdController controller;
+    private final DatabaseManager dbManager;
 
     public Application() {
-        // Инициализируем репозитории
-        LocalRepository<Group> groupRepository = new LocalRepository<>("data/groups.json", Group.class);
-        LocalRepository<Student> studentRepository = new LocalRepository<>("data/students.json", Student.class);
-        LocalRepository<Task> taskRepository = new LocalRepository<>("data/tasks.json", Task.class);
+        // Инициализируем DatabaseManager (создает пул соединений и таблицы)
+        this.dbManager = DatabaseManager.getInstance();
+
+        // Инициализируем репозитории БД
+        GroupRepository groupRepository = new GroupRepository();
+        StudentRepository studentRepository = new StudentRepository();
+        TaskRepository taskRepository = new TaskRepository();
 
         // Инициализируем сервисы
         TaskService taskService = new TaskService(taskRepository);
@@ -31,7 +35,17 @@ public class Application {
     }
 
     public void run(String[] args) {
-        controller.execute(args);
+        try {
+            controller.execute(args);
+        } finally {
+            shutdown();
+        }
+    }
+
+    public void shutdown() {
+        if (dbManager != null) {
+            dbManager.close();
+        }
     }
 
     public static void main(String[] args) {

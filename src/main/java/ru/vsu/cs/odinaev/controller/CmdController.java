@@ -9,8 +9,13 @@ import org.jline.utils.InfoCmp;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
-import ru.vsu.cs.odinaev.model.*;
-import ru.vsu.cs.odinaev.service.*;
+import ru.vsu.cs.odinaev.model.Group;
+import ru.vsu.cs.odinaev.model.Student;
+import ru.vsu.cs.odinaev.model.Task;
+import ru.vsu.cs.odinaev.model.TaskStatus;
+import ru.vsu.cs.odinaev.service.GroupService;
+import ru.vsu.cs.odinaev.service.StudentService;
+import ru.vsu.cs.odinaev.service.TaskService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -633,31 +638,4 @@ public class CmdController implements Controller {
             terminal.writer().println("ОШИБКА сброса задачи: " + e.getMessage());
         }
     }
-
-    private static String[] splitArgs(String input) {
-        List<String> args = new ArrayList<>();
-        StringBuilder current = new StringBuilder();
-        boolean inQuotes = false;
-
-        for (int i = 0; i < input.length(); i++) {
-            char c = input.charAt(i);
-            if (c == '"') {
-                inQuotes = !inQuotes;
-            } else if (Character.isWhitespace(c) && !inQuotes) {
-                if (!current.isEmpty()) {
-                    args.add(current.toString());
-                    current.setLength(0);
-                }
-            } else {
-                current.append(c);
-            }
-        }
-        if (current.isEmpty()) {
-            return args.toArray(new String[0]);
-        }
-        args.add(current.toString());
-
-        return args.toArray(new String[0]);
-    }
-
 }
