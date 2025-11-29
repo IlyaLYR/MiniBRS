@@ -32,54 +32,38 @@ public class GroupServlet extends HttpServlet {
 
         String pathInfo = req.getPathInfo();
 
-        try {
-            if (pathInfo == null || pathInfo.equals("/")) {
-                handleGetAllGroups(resp);
-            } else {
-                handleGetGroupById(req, resp);
-            }
-        } catch (Exception e) {
-            ResponseUtility.handleError(resp, 500, "Internal server error");
+        if (pathInfo == null || pathInfo.equals("/")) {
+            handleGetAllGroups(resp);
+        } else {
+            handleGetGroupById(req, resp);
         }
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         ResponseUtility.setupResponse(resp);
-
-        try {
-            handleCreateGroup(req, resp);
-        } catch (Exception e) {
-            ResponseUtility.handleError(resp, 500, "Internal server error");
-        }
+        handleCreateGroup(req, resp);
     }
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         ResponseUtility.setupResponse(resp);
-
-        try {
-            handleUpdateGroup(req, resp);
-        } catch (Exception e) {
-            ResponseUtility.handleError(resp, 500, "Internal server error");
-        }
+        handleUpdateGroup(req, resp);
     }
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         ResponseUtility.setupResponse(resp);
-
-        try {
-            handleDeleteGroup(req, resp);
-        } catch (Exception e) {
-            ResponseUtility.handleError(resp, 500, "Internal server error");
-        }
+        handleDeleteGroup(req, resp);
     }
 
-
     private void handleGetAllGroups(HttpServletResponse resp) throws IOException {
-        List<Group> groups = groupService.getAllGroups();
-        ResponseUtility.sendSuccess(resp, 200, groups);
+        try {
+            List<Group> groups = groupService.getAllGroups();
+            ResponseUtility.sendSuccess(resp, 200, groups);
+        } catch (Exception e) {
+            ResponseUtility.handleError(resp, 500, "Failed to retrieve groups");
+        }
     }
 
     private void handleGetGroupById(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -97,25 +81,33 @@ public class GroupServlet extends HttpServlet {
             }
         } catch (IllegalArgumentException e) {
             ResponseUtility.handleError(resp, 400, "Invalid UUID format");
+        } catch (Exception e) {
+            ResponseUtility.handleError(resp, 500, "Failed to retrieve group");
         }
     }
 
     private void handleCreateGroup(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        GroupRequest request = gson.fromJson(req.getReader(), GroupRequest.class);
+        try {
+            GroupRequest request = gson.fromJson(req.getReader(), GroupRequest.class);
 
-        if (request.getName() == null || request.getName().trim().isEmpty()) {
-            ResponseUtility.handleError(resp, 400, "Group name is required");
-            return;
+            if (request.getName() == null || request.getName().trim().isEmpty()) {
+                ResponseUtility.handleError(resp, 400, "Group name is required");
+                return;
+            }
+
+            Group group = groupService.createGroup(request.getName(), request.getCourse());
+            ResponseUtility.sendSuccess(resp, 201, group);
+        } catch (IllegalArgumentException e) {
+            ResponseUtility.handleError(resp, 400, e.getMessage());
+        } catch (Exception e) {
+            ResponseUtility.handleError(resp, 500, "Failed to create group");
         }
-
-        Group group = groupService.createGroup(request.getName(), request.getCourse());
-        ResponseUtility.sendSuccess(resp, 201, group);
     }
 
     private void handleUpdateGroup(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String pathInfo = req.getPathInfo();
         if (pathInfo == null || pathInfo.equals("/")) {
-            ResponseUtility.handleError(resp, 404, "Group ID required");
+            ResponseUtility.handleError(resp, 400, "Group ID required");
             return;
         }
 
@@ -124,19 +116,26 @@ public class GroupServlet extends HttpServlet {
         try {
             UUID groupId = UUID.fromString(id);
             GroupRequest request = gson.fromJson(req.getReader(), GroupRequest.class);
-            Group updatedGroup = groupService.updateGroup(groupId, request.getName(), request.getCourse());
 
+            if (request.getName() == null || request.getName().trim().isEmpty()) {
+                ResponseUtility.handleError(resp, 400, "Group name is required");
+                return;
+            }
+
+            Group updatedGroup = groupService.updateGroup(groupId, request.getName(), request.getCourse());
             ResponseUtility.sendSuccess(resp, 200, updatedGroup);
 
         } catch (IllegalArgumentException e) {
             ResponseUtility.handleError(resp, 400, "Invalid UUID format");
+        } catch (Exception e) {
+            ResponseUtility.handleError(resp, 500, "Failed to update group");
         }
     }
 
     private void handleDeleteGroup(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String pathInfo = req.getPathInfo();
         if (pathInfo == null || pathInfo.equals("/")) {
-            ResponseUtility.handleError(resp, 404, "Group ID required");
+            ResponseUtility.handleError(resp, 400, "Group ID required");
             return;
         }
 
@@ -155,6 +154,8 @@ public class GroupServlet extends HttpServlet {
 
         } catch (IllegalArgumentException e) {
             ResponseUtility.handleError(resp, 400, "Invalid UUID format");
+        } catch (Exception e) {
+            ResponseUtility.handleError(resp, 500, "Failed to delete group");
         }
     }
 }

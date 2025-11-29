@@ -27,7 +27,7 @@ public class GroupRepository implements IGroupRepository {
 
             stmt.setString(1, group.getId().toString());
             stmt.setString(2, group.getName());
-            stmt.setInt(3, group.getCourseNumber());
+            stmt.setInt(3, group.getCourse());
             stmt.executeUpdate();
 
         } catch (SQLException e) {
@@ -79,7 +79,7 @@ public class GroupRepository implements IGroupRepository {
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, group.getName());
-            stmt.setInt(2, group.getCourseNumber());
+            stmt.setInt(2, group.getCourse());
             stmt.setString(3, group.getId().toString());
             stmt.executeUpdate();
 

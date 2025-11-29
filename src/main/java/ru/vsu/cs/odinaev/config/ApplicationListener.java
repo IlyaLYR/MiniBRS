@@ -14,9 +14,12 @@ import ru.vsu.cs.odinaev.service.TaskService;
 
 @WebListener
 public class ApplicationListener implements ServletContextListener {
+    private DatabaseManager database;
+
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
+        this.database = DatabaseManager.getInstance();
         GroupRepository groupRepository = new GroupRepository();
         StudentRepository studentRepository = new StudentRepository();
         TaskRepository taskRepository = new TaskRepository();
@@ -35,6 +38,6 @@ public class ApplicationListener implements ServletContextListener {
 
     @Override
     public void contextDestroyed(ServletContextEvent sce) {
-        DatabaseManager.getInstance().close();
+        database.close();
     }
 }

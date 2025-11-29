@@ -22,21 +22,21 @@ public class Group {
     /**
      * Номер курса, на котором обучается группа (от 1 до 6)
      */
-    private int courseNumber;
+    private int course;
 
     /**
      * Создает новую учебную группу.
      *
      * @param id           уникальный идентификатор группы
      * @param name         название группы, не должно быть null или пустым
-     * @param courseNumber номер курса, должен быть в диапазоне от 1 до 6
+     * @param course номер курса, должен быть в диапазоне от 1 до 6
      * @throws IllegalArgumentException если name null или пустое,
      *                                  или courseNumber вне допустимого диапазона
      */
-    public Group(UUID id, String name, int courseNumber) {
+    public Group(UUID id, String name, int course) {
         this.id = id;
         this.name = name;
-        this.courseNumber = courseNumber;
+        this.course = course;
     }
 
     /**
@@ -62,8 +62,8 @@ public class Group {
      *
      * @return номер курса (от 1 до 6)
      */
-    public int getCourseNumber() {
-        return courseNumber;
+    public int getCourse() {
+        return course;
     }
 
     /**
@@ -79,22 +79,22 @@ public class Group {
     /**
      * Устанавливает новый номер курса для группы.
      *
-     * @param courseNumber новый номер курса, должен быть в диапазоне от 1 до 6
+     * @param course новый номер курса, должен быть в диапазоне от 1 до 6
      * @throws IllegalArgumentException если courseNumber вне допустимого диапазона
      */
-    public void setCourseNumber(int courseNumber) {
-        this.courseNumber = courseNumber;
+    public void setCourse(int course) {
+        this.course = course;
     }
 
     /**
      * Возвращает строковое представление группы в формате:
-     * "Группа{ID: [первые_8_символов_ID]..., Название: '[name]', Курс: [courseNumber]}"
+     * "Группа{ID: [первые_8_символов_ID]..., Название: '[name]', Курс: [courseNumber]"
      *
      * @return строковое представление группы
      */
     @Override
     public String toString() {
-        return String.format("Группа{ID: %s, Название: '%s', Курс: %d}", id.toString().substring(0, 8) + "...", name, courseNumber);
+        return String.format("Группа{ID: %s, Название: '%s', Курс: %d}", id.toString().substring(0, 8) + "...", name, course);
     }
 
     /**

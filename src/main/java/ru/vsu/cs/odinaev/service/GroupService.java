@@ -51,7 +51,7 @@ public record GroupService(GroupRepository groupRepository, StudentService stude
         validateCourseNumber(newCourseNumber);
 
         existingGroup.setName(newName);
-        existingGroup.setCourseNumber(newCourseNumber);
+        existingGroup.setCourse(newCourseNumber);
 
         groupRepository.update(existingGroup);
         return existingGroup;

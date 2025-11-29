@@ -18,6 +18,5 @@ GET    /api/students/group/{groupId}    # Студенты группы
 Tasks API
 --------------------------------------------------------------
 GET    /api/tasks/student/{studentId}        # Задачи студента
-PUT    /api/tasks/student/{studentId}/mark   # Отметить задачу
-PUT    /api/tasks/student/{studentId}/reset  # Сбросить задачу
-GET    /api/tasks/student/{studentId}/progress # Прогресс студента
+PUT    /api/tasks/{id}/mark   # Отметить задачу
+PUT    /api/tasks/{id}/reset  # Сбросить задачу

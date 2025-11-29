@@ -2,6 +2,7 @@ plugins {
     id("java")
     id("application")
     id("war") // Оставляем для создания WAR файлов
+    id ("org.gretty") version ("4.1.0")
 }
 
 group = "ru.vsu.cs.odinaev"
@@ -63,4 +64,9 @@ java {
     toolchain {
         languageVersion.set(JavaLanguageVersion.of(17))
     }
+}
+
+gretty {
+    httpPort = 8080
+    contextPath = "/"
 }
